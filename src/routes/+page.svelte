@@ -21,6 +21,10 @@
 	function hadnleInsert() {
 		assessments = [...assessments, { name: '', weight: 0, mark: 0, invigilated: false }];
 	}
+
+	function handleKeyPress(e: KeyboardEvent) {
+		if (e.key == 'Enter') handleCalculate();
+	}
 </script>
 
 <div class="flex flex-col items-center gap-5">
@@ -44,7 +48,7 @@
 	<div class="flex gap-5">
 		<div class="w-64 rounded-xl overflow-hidden shadow-md text-gray-700 dark:text-gray-400">
 			<div class="px-6 py-4">
-				<div class=" mb-2">Total</div>
+				<div class=" mb-2">Grade</div>
 				<p class=" text-2xl font-bold">
 					{totalWeighted.toFixed(2)}
 				</p>
@@ -61,31 +65,43 @@
 		</div>
 	</div>
 	<div>
-		<h3 class="text-3xl font-bold dark:text-white">Assessments</h3>
+		<h3 class="text-3xl font-bold p-3 dark:text-white">Assessments</h3>
 		<div class="relative overflow-x-auto">
 			<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
 				<thead
 					class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
 				>
 					<tr>
-						<th scope="col" class="px-6 py-3">Name </th>
-						<th scope="col" class="px-6 py-3">Weight </th>
-						<th scope="col" class="px-6 py-3">Grade </th>
-						<th scope="col" class="px-6 py-3">Invigilated </th>
-						<th scope="col" class="px-6 py-3" />
+						<th scope="col" class="px-6 py-3">Name</th>
+						<th scope="col" class="px-6 py-3">Weight</th>
+						<th scope="col" class="px-6 py-3">Grade</th>
+						<th scope="col" class="px-6 py-3">Invigilated</th>
+						<th scope="col" class="px-6 py-3">Contribution</th>
 					</tr>
 				</thead>
 				<tbody class="font-medium text-gray-900 dark:text-white">
 					{#each assessments as assessment, i}
 						<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 group">
 							<td class="px-6 py-4">
-								<input bind:value={assessment.name} class="bg-white dark:bg-gray-800" />
+								<input
+									bind:value={assessment.name}
+									on:keyup={(e) => handleKeyPress(e)}
+									class="bg-white dark:bg-gray-800"
+								/>
 							</td>
 							<td class="px-6 py-4">
-								<input bind:value={assessment.weight} class="bg-white dark:bg-gray-800" />
+								<input
+									bind:value={assessment.weight}
+									on:keyup={(e) => handleKeyPress(e)}
+									class="bg-white dark:bg-gray-800"
+								/>
 							</td>
 							<td class="px-6 py-4">
-								<input bind:value={assessment.mark} class="bg-white dark:bg-gray-800" />
+								<input
+									bind:value={assessment.mark}
+									on:keyup={(e) => handleKeyPress(e)}
+									class="bg-white dark:bg-gray-800"
+								/>
 							</td>
 							<td class="px-6 py-4">
 								<input
@@ -95,9 +111,12 @@
 								/>
 							</td>
 							<td class="px-6 py-4">
+								<span class="opacity-100 group-hover:opacity-0">
+									{(weightedMark(assessment) || 0).toFixed(2)}%
+								</span>
 								<button
 									on:click={() => handleRemove(i)}
-									class="font-medium text-blue-600 dark:text-blue-500 hover:underline opacity-0 group-hover:opacity-100"
+									class="font-medium align-middle text-blue-600 dark:text-blue-500 hover:underline opacity-0 group-hover:opacity-100"
 									><svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
