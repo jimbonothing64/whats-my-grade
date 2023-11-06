@@ -8,20 +8,33 @@
 	} from '$lib/grades';
 	import { validateAssessments, type Assessment } from '$lib/zod';
 	let assessments: Assessment[] = [
-		{ name: 'Assignment1', weight: 50.0, mark: 100.0, invigilated: false },
-		{ name: 'Assignment2', weight: 25.0, mark: 100.0, invigilated: false },
-		{ name: 'Assignment3', weight: 25.0, mark: 100.0, invigilated: false }
+		{ name: 'Assignment 1', weight: 50.0, mark: 100.0, invigilated: false },
+		{ name: 'Assignment 2', weight: 25.0, mark: 100.0, invigilated: false },
+		{ name: 'Assignment 3', weight: 25.0, mark: 100.0, invigilated: false }
 	];
 	let totalWeighted = totalWeightedMark(assessments);
 	let totalInvigilated = totalInvigilatedWeightedMark(assessments);
 	let total = totalWeight(assessments);
+	let statsElement: Element | undefined;
 
-	function handleCalculate() {
+	function elementIsVisibleInViewport(el: Element, partiallyVisible = false) {
+		const { top, left, bottom, right } = el.getBoundingClientRect();
+		const { innerHeight, innerWidth } = window;
+		return partiallyVisible
+			? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) &&
+					((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
+			: top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
+	}
+
+	function handleCalculate(scroll = false) {
 		const { valids, errors } = validateAssessments(assessments);
 		console.log(errors);
 		total = totalWeight(valids);
 		totalWeighted = totalWeightedMark(valids);
 		totalInvigilated = totalInvigilatedWeightedMark(valids);
+		if (scroll && statsElement) {
+			if (!elementIsVisibleInViewport(statsElement, true)) statsElement.scrollIntoView(true);
+		}
 	}
 
 	function handleRemove(indexToRemove: number) {
@@ -39,30 +52,32 @@
 
 <section class="text-center">
 	<h1
-		class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
+		class="mb-4 px-3 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
 	>
 		What's my <span
 			class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-600">grade</span
 		>?
 	</h1>
-	<p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+	<p
+		class="mb-6 px-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400"
+	>
 		A tool to help students calculate their current grades in various courses. You can input
 		assessment scores and weightings, and be provided with an estimate of your current standing in
 		the course.
 	</p>
 </section>
-<section class=" py-5">
-	<div class="flex justify-center">
-		<div class="flex gap-5 flex-col md:flex-row">
+<section class=" py-3">
+	<div class="flex justify-center bg-white p-4">
+		<div bind:this={statsElement} class="flex gap-5 flex-col md:flex-row">
 			<StatCard bind:stat={totalWeighted} title="Grade" />
 			<StatCard bind:stat={totalInvigilated} title="Invigilated" />
 		</div>
 	</div>
 	<div>
-		<div class="flex justify-between">
-			<h3 class="text-xl font-bold dark:text-white p-5">Assessments</h3>
+		<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
+			<h3 class="text-xl align-middle font-bold dark:text-white p-5">Assessments</h3>
 			<button
-				on:click={() => handleCalculate()}
+				on:click={() => handleCalculate(true)}
 				class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 inline-flex items-center"
 			>
 				<svg
