@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { weightedMark, totalWeightedMark, totalInvigilatedWeightedMark } from '$lib/grades';
-	let assessments = [
+	import { validateAssessments, type Assessment } from '$lib/zod';
+	let assessments: Assessment[] = [
 		{ name: 'Assignment1', weight: 50.0, mark: 100.0, invigilated: false },
 		{ name: 'Assignment2', weight: 25.0, mark: 100.0, invigilated: false },
 		{ name: 'Assignment3', weight: 25.0, mark: 100.0, invigilated: false }
@@ -9,9 +10,12 @@
 	let totalInvigilated = totalInvigilatedWeightedMark(assessments);
 
 	function handleCalculate() {
+		const { valids, errors } = validateAssessments(assessments);
 		console.log(assessments);
-		totalWeighted = totalWeightedMark(assessments);
-		totalInvigilated = totalInvigilatedWeightedMark(assessments);
+		console.log(valids);
+		console.log(errors);
+		totalWeighted = totalWeightedMark(valids);
+		totalInvigilated = totalInvigilatedWeightedMark(valids);
 	}
 
 	function handleRemove(indexToRemove: number) {

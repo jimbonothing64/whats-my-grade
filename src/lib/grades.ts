@@ -1,26 +1,15 @@
-import { assignmentSchema } from '$lib/zod';
-
-/**
- * Create an assessment item.
- * @param weight of assessment in final mark as percent, i.e. 65.
- * @param invigilated weather the assessment is invigilated or not.
- * @param mark as percent, i.e. 65 (if mark exists).
- * @returns an assessment with.
- */
-const assessment = (name: string, weight: number, invigilated: boolean, mark?: number) => {
-	return { name, weight, mark, invigilated };
-};
+import type { Assessment } from '$lib/zod';
 
 /**
  * Calculate the mark for that assessment after weight adjustment, i.e. that
  * assessment's contrubution to their final grade.
- * @param ass assessment to calculate weighted mark for.
+ * @param assessment assessment to calculate weighted mark for.
  * @param totalWeight of assessments to add up.
  * @returns the mark going towards final grade
  */
-const weightedMark = (ass: ReturnType<typeof assessment>, totalWeight = 100.0) => {
-	if (!ass.mark) return 0.0;
-	return ass.mark * (ass.weight / totalWeight);
+const weightedMark = (assessment: Assessment, totalWeight = 100.0) => {
+	if (!assessment.mark) return 0.0;
+	return assessment.mark * (assessment.weight / totalWeight);
 };
 
 /**
@@ -28,10 +17,10 @@ const weightedMark = (ass: ReturnType<typeof assessment>, totalWeight = 100.0) =
  * @param assessments to calculate total weight of.
  * @returns all weights for provided assessments
  */
-const totalWeight = (assessments: ReturnType<typeof assessment>[]) => {
+const totalWeight = (assessments: Assessment[]) => {
 	let totalWeight = 0.0;
-	for (const ass of assessments) {
-		totalWeight += ass.weight;
+	for (const assessment of assessments) {
+		totalWeight += assessment.weight;
 	}
 	return totalWeight;
 };
@@ -42,11 +31,11 @@ const totalWeight = (assessments: ReturnType<typeof assessment>[]) => {
  * @param assessments to calculate total weighted mark for
  * @returns total weighted mark of assessments
  */
-const totalWeightedMark = (assessments: ReturnType<typeof assessment>[]) => {
+const totalWeightedMark = (assessments: Assessment[]) => {
 	const weightSum = totalWeight(assessments);
 	let total = 0.0;
-	for (const ass of assessments) {
-		total += weightedMark(ass, weightSum);
+	for (const assessment of assessments) {
+		total += weightedMark(assessment, weightSum);
 	}
 	return total;
 };
@@ -56,9 +45,9 @@ const totalWeightedMark = (assessments: ReturnType<typeof assessment>[]) => {
  * @param assessments
  * @returns
  */
-const totalInvigilatedWeightedMark = (assessments: ReturnType<typeof assessment>[]) => {
-	const invigilateds = assessments.filter((ass) => ass.invigilated);
+const totalInvigilatedWeightedMark = (assessments: Assessment[]) => {
+	const invigilateds = assessments.filter((assessment) => assessment.invigilated);
 	return totalWeightedMark(invigilateds);
 };
 
-export { assessment, weightedMark, totalWeight, totalWeightedMark, totalInvigilatedWeightedMark };
+export { weightedMark, totalWeight, totalWeightedMark, totalInvigilatedWeightedMark };
