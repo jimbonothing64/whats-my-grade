@@ -9,7 +9,6 @@ export const assignmentSchema = z.object({
 
 export const validateAssessments = (assessments: Assessment[]) => {
 	const errors: { [index: number]: unknown } = {};
-	// const errors: { [index: number]:  } = {};
 	const valids = [];
 	for (const [index, assessment] of assessments.entries()) {
 		try {
