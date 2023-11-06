@@ -7,6 +7,7 @@
 		totalWeight
 	} from '$lib/grades';
 	import { validateAssessments, type Assessment } from '$lib/zod';
+
 	let assessments: Assessment[] = [
 		{ name: 'Assignment 1', weight: 50.0, mark: 100.0, invigilated: false },
 		{ name: 'Assignment 2', weight: 25.0, mark: 100.0, invigilated: false },
@@ -33,7 +34,7 @@
 		totalWeighted = totalWeightedMark(valids);
 		totalInvigilated = totalInvigilatedWeightedMark(valids);
 		if (scroll && statsElement) {
-			if (!elementIsVisibleInViewport(statsElement, true)) statsElement.scrollIntoView(true);
+			if (!elementIsVisibleInViewport(statsElement, true)) statsElement.scrollIntoView(false);
 		}
 	}
 
@@ -67,7 +68,7 @@
 	</p>
 </section>
 <section class=" py-3">
-	<div class="flex justify-center bg-white p-4">
+	<div class="flex justify-center p-4">
 		<div bind:this={statsElement} class="flex gap-5 flex-col md:flex-row">
 			<StatCard bind:stat={totalWeighted} title="Grade" />
 			<StatCard bind:stat={totalInvigilated} title="Invigilated" />
