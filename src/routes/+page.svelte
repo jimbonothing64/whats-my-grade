@@ -16,6 +16,7 @@
 	let totalWeighted = totalWeightedMark(assessments);
 	let totalInvigilated = totalInvigilatedWeightedMark(assessments);
 	let total = totalWeight(assessments);
+	let invalids: Number[] = [];
 	let statsElement: Element | undefined;
 
 	function elementIsVisibleInViewport(el: Element, partiallyVisible = false) {
@@ -29,11 +30,11 @@
 
 	function handleCalculate(scroll = false) {
 		const { valids, errors } = validateAssessments(assessments);
-		console.log(errors);
+		invalids = Object.keys(errors).map((el) => Number(el));
 		total = totalWeight(valids);
 		totalWeighted = totalWeightedMark(valids);
 		totalInvigilated = totalInvigilatedWeightedMark(valids);
-		if (scroll && statsElement) {
+		if (scroll && invalids.length === 0 && statsElement) {
 			if (!elementIsVisibleInViewport(statsElement, true)) statsElement.scrollIntoView(false);
 		}
 	}
@@ -55,7 +56,7 @@
 	<h1
 		class="mb-4 px-3 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
 	>
-		What's my <span
+		&#x1F913 What's my <span
 			class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-600">grade</span
 		>?
 	</h1>
@@ -136,9 +137,29 @@
 						<div>of {total.toFixed(2)}%</div>
 					</div>
 
+					{#if invalids.includes(i)}
+						<div
+							class="font-medium md:flex md:justify-between text-inherit bg-inherit text-red-500 dark:text-red-400 hover:underline opacity-100 group-hover:hidden hidden"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-6 h-6"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+								/>
+							</svg>
+						</div>
+					{/if}
 					<button
 						on:click={() => handleRemove(i)}
-						class="font-medium flex justify-end md:justify-between text-inherit bg-inherit hover:underline md:opacity-0 group-hover:opacity-100"
+						class="font-medium hidden justify-end md:justify-between text-inherit bg-inherit hover:underline md:hidden md:group-hover:flex"
 						><svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -154,6 +175,46 @@
 							/>
 						</svg>
 					</button>
+					<div class="flex justify-between md:hidden">
+						<button
+							on:click={() => handleRemove(i)}
+							class="font-medium flex justify-end md:justify-between text-inherit bg-inherit hover:underline md:hidden group-hover:flex"
+							><svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-6 h-6"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+								/>
+							</svg>
+						</button>
+						{#if invalids.includes(i)}
+							<div
+								class="font-medium text-red-500 dark:text-red-400 flex md:hidden text-inherit bg-inherit hover:underline"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="w-6 h-6"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+									/>
+								</svg>
+							</div>
+						{/if}
+					</div>
 				</div>
 			{/each}
 
