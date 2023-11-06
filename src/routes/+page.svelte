@@ -1,5 +1,6 @@
 <script lang="ts">
 	import StatCard from '$lib/components/StatCard.svelte';
+	import { browser } from '$app/environment';
 	import {
 		weightedMark,
 		totalWeightedMark,
@@ -8,8 +9,8 @@
 	} from '$lib/grades';
 	import { validateAssessments, type Assessment } from '$lib/zod';
 
-	let assessments: Assessment[] = [
-		{ name: 'Assignment 1', weight: 50.0, mark: 100.0, invigilated: false },
+	let assessments: Assessment[] = getLocalAssessments() || [
+		{ name: 'Exam', weight: 50.0, mark: 100.0, invigilated: false },
 		{ name: 'Assignment 2', weight: 25.0, mark: 100.0, invigilated: false },
 		{ name: 'Assignment 3', weight: 25.0, mark: 100.0, invigilated: false }
 	];
@@ -19,6 +20,10 @@
 	let invalids: Number[] = [];
 	let statsElement: Element | undefined;
 
+	$: {
+		setLocalAssessments(assessments);
+	}
+
 	function elementIsVisibleInViewport(el: Element, partiallyVisible = false) {
 		const { top, left, bottom, right } = el.getBoundingClientRect();
 		const { innerHeight, innerWidth } = window;
@@ -26,6 +31,21 @@
 			? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) &&
 					((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
 			: top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
+	}
+
+	function getLocalAssessments() {
+		try {
+			const localAssessments = localStorage.getItem('assessments') as string;
+			const jsonAssessments = JSON.parse(localAssessments) as Assessment[];
+			const { valids, errors } = validateAssessments(jsonAssessments);
+			return valids;
+		} catch {
+			return null;
+		}
+	}
+
+	function setLocalAssessments(assessments: Assessment[]) {
+		if (browser) localStorage.setItem('assessments', JSON.stringify(assessments));
 	}
 
 	function handleCalculate(scroll = false) {
