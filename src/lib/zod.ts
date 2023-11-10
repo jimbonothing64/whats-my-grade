@@ -7,7 +7,7 @@ export const assignmentSchema = z.object({
 	invigilated: z.boolean()
 });
 
-export const validateAssessments = (assessments: Assessment[]) => {
+export const validateAssessments = (assessments: Assessment[] | unknown[]) => {
 	const errors: { [index: number]: unknown } = {};
 	const valids = [];
 	for (const [index, assessment] of assessments.entries()) {

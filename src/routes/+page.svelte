@@ -8,6 +8,9 @@
 		totalWeight
 	} from '$lib/grades';
 	import { validateAssessments, type Assessment } from '$lib/zod';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+	import type { PageData } from './$types';
 
 	const DEMO_ASSESSMENTS = [
 		{ name: 'Exam', weight: 50.0, mark: 100.0, invigilated: false },
@@ -15,7 +18,9 @@
 		{ name: 'Assignment 2', weight: 25.0, mark: 100.0, invigilated: false }
 	];
 
-	let assessments: Assessment[] = intialGetLocalAssessments() || [];
+	export let data: PageData;
+	let assessments = intialiseAssessments();
+
 	let totalWeighted = totalWeightedMark(assessments);
 	let totalInvigilated = totalInvigilatedWeightedMark(assessments);
 	let total = totalWeight(assessments);
@@ -24,6 +29,7 @@
 
 	$: {
 		setLocalAssessments(assessments);
+		setUrlAssessments(assessments);
 	}
 
 	function elementIsVisibleInViewport(el: Element, partiallyVisible = false) {
@@ -35,14 +41,11 @@
 			: top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
 	}
 
-	function intialGetLocalAssessments() {
-		if (browser) {
-			const localAssessments = sessionStorage.getItem('assessments') as string;
-			if (!localAssessments) {
-				return DEMO_ASSESSMENTS;
-			}
+	function intialiseAssessments() {
+		if (data?.assessments) {
+			return data.assessments as Assessment[];
 		}
-		return getLocalAssessments();
+		return getLocalAssessments() || [];
 	}
 
 	function getLocalAssessments() {
@@ -58,6 +61,14 @@
 
 	function setLocalAssessments(assessments: Assessment[]) {
 		if (browser) sessionStorage.setItem('assessments', JSON.stringify(assessments));
+	}
+
+	function setUrlAssessments(assessments: Assessment[]) {
+		const stringified = JSON.stringify(assessments);
+		if (stringified && browser) {
+			$page.url.searchParams.set('assessments', stringified);
+			goto($page.url, { keepFocus: true }); // Set updated url.
+		}
 	}
 
 	function handleCalculate(scroll = false) {
