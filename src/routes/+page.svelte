@@ -78,10 +78,6 @@
 	function hadnleInsert() {
 		assessments = [...assessments, { name: '', weight: 0, mark: 0, invigilated: false }];
 	}
-
-	function handleKeyPress(e: KeyboardEvent) {
-		if (e.key == 'Enter') handleCalculate();
-	}
 </script>
 
 <section class="text-center">
@@ -138,7 +134,6 @@
 					<div class="flex flex-row justify-between">
 						<input
 							bind:value={assessment.name}
-							on:keyup={(e) => handleKeyPress(e)}
 							on:focusout={() => handleCalculate()}
 							placeholder="Assessment Name"
 							class=" font-bold outline-none text-inherit bg-inherit w-48"
@@ -170,7 +165,6 @@
 						Weight:
 						<input
 							bind:value={assessment.weight}
-							on:keyup={(e) => handleKeyPress(e)}
 							on:focusout={() => handleCalculate()}
 							class="outline-none w-32 text-inherit bg-inherit border-b border-dashed"
 						/>
@@ -179,14 +173,18 @@
 						Mark:
 						<input
 							bind:value={assessment.mark}
-							on:keyup={(e) => handleKeyPress(e)}
 							on:focusout={() => handleCalculate()}
 							class="outline-none w-32 text-inherit bg-inherit border-b border-dashed"
 						/>
 					</label>
 					<label class="w-32">
 						Invigilated:
-						<input type="checkbox" bind:checked={assessment.invigilated} class="outline-none" />
+						<input
+							type="checkbox"
+							bind:checked={assessment.invigilated}
+							on:change={() => handleCalculate()}
+							class="outline-none"
+						/>
 					</label>
 
 					{#if invalids.includes(i)}
