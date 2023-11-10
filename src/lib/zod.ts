@@ -23,3 +23,4 @@ export const validateAssessments = (assessments: Assessment[] | unknown[]) => {
 };
 
 export type Assessment = z.infer<typeof assignmentSchema>;
+export type ValidatedAssessments = ReturnType<typeof validateAssessments>;
