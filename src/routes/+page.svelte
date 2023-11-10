@@ -1,12 +1,7 @@
 <script lang="ts">
 	import StatCard from '$lib/components/StatCard.svelte';
 	import { browser } from '$app/environment';
-	import {
-		weightedMark,
-		totalWeightedMark,
-		totalInvigilatedWeightedMark,
-		totalWeight
-	} from '$lib/grades';
+	import { totalWeightedMark, totalInvigilatedWeightedMark, totalWeight } from '$lib/grades';
 	import { validateAssessments, type Assessment } from '$lib/zod';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
@@ -122,7 +117,7 @@
 		<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
 			<h3 class="text-xl align-middle font-bold dark:text-white p-5">Assessments</h3>
 			<button
-				on:click={() => handleCalculate(true)}
+				on:click={() => handleCalculate(true, true)}
 				class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 inline-flex items-center"
 			>
 				<svg
