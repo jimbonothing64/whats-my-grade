@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let stat: number;
 	export let title: string;
+	export let subtitle: string | undefined = undefined;
 </script>
 
 <div
@@ -11,5 +12,8 @@
 		<p class="text-2xl font-bold text-black dark:text-white">
 			{stat.toFixed(2)}%
 		</p>
+		{#if subtitle}
+			<p class="text-sm">{subtitle}</p>
+		{/if}
 	</div>
 </div>

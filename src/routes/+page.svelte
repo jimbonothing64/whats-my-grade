@@ -24,6 +24,7 @@
 
 	$: {
 		setLocalAssessments(assessments);
+		console.log(assessments);
 	}
 
 	function elementIsVisibleInViewport(el: Element, partiallyVisible = false) {
@@ -90,27 +91,19 @@
 	}
 </script>
 
-<section class="text-center">
-	<h1
-		class="mb-4 px-3 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
-	>
-		&#x1F913 What's my <span
-			class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-600">grade</span
-		>?
-	</h1>
-	<p
-		class="mb-6 px-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400"
-	>
-		A tool to help students calculate their current grades in various courses. You can input
-		assessment scores and weightings, and be provided with an estimate of your current standing in
-		the course.
-	</p>
-</section>
 <section class="py-3">
 	<div class="flex justify-center p-4">
 		<div bind:this={statsElement} class="flex gap-5 flex-col md:flex-row">
-			<StatCard bind:stat={totalWeighted} title="Grade" />
-			<StatCard bind:stat={totalInvigilated} title="Invigilated" />
+			<StatCard
+				bind:stat={totalWeighted}
+				title="Grade"
+				subtitle={`total weight of  ${total.toFixed(2)}%`}
+			/>
+			<StatCard
+				bind:stat={totalInvigilated}
+				title="Invigilated"
+				subtitle={`total weight of ${totalInvigilated.toFixed(2)}%`}
+			/>
 		</div>
 	</div>
 	<div>

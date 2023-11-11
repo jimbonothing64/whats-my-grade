@@ -48,7 +48,7 @@
 		<input
 			bind:value={assessment.weight}
 			on:focusout={() => handleCalculate()}
-			class="outline-none w-32 text-inherit bg-inherit border-b border-dashed"
+			class="outline-none w-16 text-inherit bg-inherit border-b border-dashed text-right"
 		/>
 	</label>
 	<label>
@@ -56,10 +56,10 @@
 		<input
 			bind:value={assessment.mark}
 			on:focusout={() => handleCalculate()}
-			class="outline-none w-32 text-inherit bg-inherit border-b border-dashed"
+			class="outline-none w-16 text-inherit bg-inherit border-b border-dashed text-right"
 		/>
 	</label>
-	<label class="w-32">
+	<label class="w-26">
 		Invigilated:
 		<input
 			type="checkbox"
@@ -68,8 +68,11 @@
 			class="outline-none"
 		/>
 	</label>
-
-	{#if invalid}
+	{#if !invalid && assessment.mark === 0}
+		<div class="justify-end">
+			<a href="/">Calc</a>
+		</div>
+	{:else if invalid}
 		<div
 			class="font-medium md:flex md:justify-end md:flex-grow text-inherit bg-inherit text-red-500 dark:text-red-400 hover:underline opacity-100 group-hover:hidden hidden"
 		>
@@ -96,6 +99,7 @@
 			<div>of {total.toFixed(2)}%</div>
 		</div>
 	{/if}
+
 	<button
 		on:click={() => handleRemove(i)}
 		class="font-medium hidden justify-end md:justify-end md:flex-grow text-inherit bg-inherit hover:underline md:hidden md:group-hover:flex"
