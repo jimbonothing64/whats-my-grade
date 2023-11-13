@@ -1,4 +1,4 @@
-import { validateAssessments } from './zod';
+import { validateAssessments, type Assessment } from './zod';
 
 export const REQUIRED_ASSESSMENT = 'requiredassessment';
 export const ASSESSMENTS = 'assessments';
@@ -20,3 +20,9 @@ export const parseAssessments = (url: URL) => {
 export const parseRequiredAssessment = (url: URL) => {
 	return url.searchParams.get(REQUIRED_ASSESSMENT);
 };
+
+export const minRequiredGradeUrl = (i: number, assessments: Assessment[]) => {
+	const stringified = JSON.stringify(assessments);
+	const url = `/required-grade/?${REQUIRED_ASSESSMENT}=${i}&${ASSESSMENTS}=${stringified}`
+	return url;
+}

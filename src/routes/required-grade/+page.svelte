@@ -2,17 +2,12 @@
 	import StatCard from '$lib/components/StatCard.svelte';
 	import { browser } from '$app/environment';
 	import { totalWeightedMark, totalInvigilatedWeightedMark, totalWeight } from '$lib/grades';
+	import { elementIsVisibleInViewport } from '$lib/lib';
 	import { validateAssessments, type Assessment } from '$lib/zod';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import AssessmentList from '$lib/components/AssessmentList.svelte';
-
-	const DEMO_ASSESSMENTS = [
-		{ name: 'Exam', weight: 50.0, mark: 100.0, invigilated: false },
-		{ name: 'Assignment 1', weight: 25.0, mark: 100.0, invigilated: false },
-		{ name: 'Assignment 2', weight: 25.0, mark: 100.0, invigilated: false }
-	];
 
 	export let data: PageData;
 	let assessments = intialiseAssessments();
@@ -25,15 +20,6 @@
 	$: {
 		setLocalAssessments(assessments);
 		console.log(assessments);
-	}
-
-	function elementIsVisibleInViewport(el: Element, partiallyVisible = false) {
-		const { top, left, bottom, right } = el.getBoundingClientRect();
-		const { innerHeight, innerWidth } = window;
-		return partiallyVisible
-			? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) &&
-					((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
-			: top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
 	}
 
 	function intialiseAssessments() {

@@ -5,6 +5,7 @@
 	import { validateAssessments, type Assessment } from '$lib/zod';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { elementIsVisibleInViewport } from '$lib/lib';
 	import type { PageData } from './$types';
 	import AssessmentList from '$lib/components/AssessmentList.svelte';
 
@@ -25,15 +26,6 @@
 	$: {
 		setLocalAssessments(assessments);
 		console.log(assessments);
-	}
-
-	function elementIsVisibleInViewport(el: Element, partiallyVisible = false) {
-		const { top, left, bottom, right } = el.getBoundingClientRect();
-		const { innerHeight, innerWidth } = window;
-		return partiallyVisible
-			? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) &&
-					((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
-			: top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
 	}
 
 	function intialiseAssessments() {
