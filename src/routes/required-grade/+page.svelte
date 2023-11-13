@@ -7,20 +7,17 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
-	import AssessmentList from '$lib/components/AssessmentList.svelte';
 
 	export let data: PageData;
-	let assessments = intialiseAssessments();
-	let total = totalWeight(assessments);
-	let totalWeighted = totalWeightedMark(assessments);
 
+	let assessments = intialiseAssessments();
 	let invalids: number[] = [];
 	let statsElement: Element | undefined;
 
-	$: {
-		setLocalAssessments(assessments);
-		console.log(assessments);
-	}
+	$: requiredAssessmentIndex = data.requiredAssessment;
+	$: requiredAssessment = assessments[requiredAssessmentIndex];
+	$: total = totalWeight(assessments);
+	$: totalWeighted = totalWeightedMark(assessments);
 
 	function intialiseAssessments() {
 		if (data?.assessments) {
@@ -38,10 +35,6 @@
 		} catch {
 			return null;
 		}
-	}
-
-	function setLocalAssessments(assessments: Assessment[]) {
-		if (browser) sessionStorage.setItem('assessments', JSON.stringify(assessments));
 	}
 
 	function setUrlAssessments(assessments: Assessment[]) {
@@ -64,28 +57,22 @@
 			setUrlAssessments(assessments);
 		}
 	}
-
-	function handleRemove(indexToRemove: number) {
-		assessments = assessments.filter((_, index) => index !== indexToRemove);
-		handleCalculate();
-	}
-
-	function hadnleInsert() {
-		assessments = [...assessments, { name: '', weight: 0, mark: 0, invigilated: false }];
-		handleCalculate();
-	}
 </script>
 
 <section class="py-3">
 	<div class="flex justify-center p-4">
 		<div bind:this={statsElement} class="flex gap-5 flex-col md:flex-row">
 			<StatCard bind:stat={totalWeighted} title="Grade" />
-			<StatCard stat={90} title="Required Grade" subtitle="in Exam" />
+			<StatCard stat={90} title="Required Grade" subtitle="in {requiredAssessment.name}" />
 		</div>
 	</div>
 	<div>
 		<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
-			<h3 class="text-xl align-middle font-bold dark:text-white p-5">Assessments</h3>
+			<label>
+				Desired Grade:
+				<input placeholder="100" />
+			</label>
+
 			<button
 				on:click={() => handleCalculate(true, true)}
 				class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 inline-flex items-center"
@@ -106,13 +93,5 @@
 				</svg>
 			</button>
 		</div>
-		<AssessmentList
-			bind:assessments
-			bind:invalids
-			bind:total
-			{hadnleInsert}
-			{handleRemove}
-			{handleCalculate}
-		/>
 	</div>
 </section>

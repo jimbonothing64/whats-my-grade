@@ -18,7 +18,11 @@ export const parseAssessments = (url: URL) => {
 };
 
 export const parseRequiredAssessment = (url: URL) => {
-	return url.searchParams.get(REQUIRED_ASSESSMENT);
+	const required = url.searchParams.get(REQUIRED_ASSESSMENT);
+	if (required) {
+		return parseInt(required);
+	}
+	return null;
 };
 
 export const minRequiredGradeUrl = (i: number, assessments: Assessment[]) => {
