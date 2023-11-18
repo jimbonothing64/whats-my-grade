@@ -15,9 +15,9 @@
 		<p
 			class="mb-6 px-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400"
 		>
-			A tool to help students calculate their current grades in various courses. You can input
-			assessment scores and weightings, and be provided with an estimate of your current standing in
-			the course.
+			A tool to help students calculate their current grades in various courses. Input assessment
+			scores and weightings, and be provided with an estimate of your current standing in the
+			course.
 		</p>
 	</section>
 	<slot />

@@ -41,7 +41,8 @@ const totalWeightedMark = (assessments: Assessment[]) => {
 };
 
 /**
- *
+ * Calculate the total wieghted mark for invigilated assessment items.
+ * Uses the combined weights to calculate this.
  * @param assessments
  * @returns
  */
@@ -50,4 +51,28 @@ const totalInvigilatedWeightedMark = (assessments: Assessment[]) => {
 	return totalWeightedMark(invigilateds);
 };
 
-export { weightedMark, totalWeight, totalWeightedMark, totalInvigilatedWeightedMark };
+/**
+ * Calculate the grade required to get the desired grade, based on current assessment scores.
+ * @param desiredGrade in %.
+ * @param assessment for required grade.
+ * @param assessments of that course.
+ * @returns the required grade and weather it's possible to get the desired grade.
+ */
+const requiredGrade = (desiredGrade: number, assessment: Assessment, assessments: Assessment[]) => {
+	const totalExistingGrade = totalWeightedMark(assessments);
+	const remainingWeight = totalWeight(assessments) - assessment.weight;
+	const remainingTotalScoreNeeded = (desiredGrade - totalExistingGrade) / remainingWeight;
+	console.log('remainingWeight', remainingWeight, 'req', remainingTotalScoreNeeded);
+	return {
+		requiredGrade: Math.max(Math.min(remainingTotalScoreNeeded * 100.0, 100.0), 0.0),
+		isPossible: remainingTotalScoreNeeded <= 100.0
+	};
+};
+
+export {
+	weightedMark,
+	totalWeight,
+	totalWeightedMark,
+	totalInvigilatedWeightedMark,
+	requiredGrade
+};

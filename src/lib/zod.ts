@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
+export const markSchema = z.coerce.number().min(0).max(100);
+
 export const assignmentSchema = z.object({
 	name: z.string().optional(),
 	weight: z.coerce.number().min(0).max(100),
-	mark: z.coerce.number().min(0).max(100),
+	mark: markSchema,
 	invigilated: z.boolean()
 });
 
