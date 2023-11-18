@@ -25,7 +25,6 @@
 
 	$: {
 		setLocalAssessments(assessments);
-		console.log(assessments);
 	}
 
 	function intialiseAssessments() {

@@ -62,7 +62,6 @@ const requiredGrade = (desiredGrade: number, assessment: Assessment, assessments
 	const totalExistingGrade = totalWeightedMark(assessments);
 	const remainingWeight = totalWeight(assessments) - assessment.weight;
 	const remainingTotalScoreNeeded = (desiredGrade - totalExistingGrade) / remainingWeight;
-	console.log('remainingWeight', remainingWeight, 'req', remainingTotalScoreNeeded);
 	return {
 		requiredGrade: Math.max(Math.min(remainingTotalScoreNeeded * 100.0, 100.0), 0.0),
 		isPossible: remainingTotalScoreNeeded <= 100.0

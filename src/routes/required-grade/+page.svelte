@@ -103,9 +103,9 @@
 			</svg>
 		</button>
 	</div>
-	<AssessmentList assessments={[requiredAssessment]} {handleCalculate} {invalids} {total} />
+	<AssessmentList assessments={[requiredAssessment]} {invalids} {total} />
 	<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
 		<h3 class="text-xl align-middle font-bold dark:text-white p-5">Marked Assessments</h3>
 	</div>
-	<AssessmentList bind:assessments {handleCalculate} {invalids} {total} />
+	<AssessmentList bind:assessments {invalids} {total} />
 </section>
