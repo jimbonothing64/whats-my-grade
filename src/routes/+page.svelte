@@ -10,7 +10,7 @@
 	import AssessmentList from '$lib/components/AssessmentList.svelte';
 
 	const DEMO_ASSESSMENTS = [
-		{ name: 'Exam', weight: 50.0, mark: 100.0, invigilated: false },
+		{ name: 'Exam', weight: 50.0, mark: 0.0, invigilated: false },
 		{ name: 'Assignment 1', weight: 25.0, mark: 100.0, invigilated: false },
 		{ name: 'Assignment 2', weight: 25.0, mark: 100.0, invigilated: false }
 	];

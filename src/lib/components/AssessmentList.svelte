@@ -8,14 +8,14 @@
 	export let assessments: Assessment[];
 	export let invalids: number[];
 	export let total: number;
-	export let hadnleInsert: () => void | undefined;
-	export let handleCalculate: () => void;
-	export let handleRemove: (i: number) => void;
+	export let hadnleInsert: () => void = () => {};
+	export let handleCalculate: () => void = () => {};
+	export let handleRemove: (i: number) => void = (i) => {};
 </script>
 
 <ul class="flex flex-col bg-slate-50 dark:bg-slate-900 gap-3 px-5 py-3">
 	{#each assessments as assessment, i (assessment)}
-		<AssessmentCard invalid={invalids.includes(i)}>
+		<AssessmentCard state={invalids.includes(i) ? 'invalid' : 'none'}>
 			<AssessmentDetial bind:assessment {handleCalculate} invalid={invalids.includes(i)}>
 				{#if !invalids.includes(i) && assessment.mark === 0}
 					<div class="justify-end">

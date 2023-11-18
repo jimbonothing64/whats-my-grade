@@ -5,9 +5,8 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = ({ url }) => {
 	const assessments = parseAssessments(url);
 	const requiredAssessment = parseRequiredAssessment(url);
-	if (!assessments || !requiredAssessment) {
-		url.pathname = '/';
-		throw redirect(301, url);
+	if (!assessments || requiredAssessment === null) {
+		throw redirect(301, '/');
 	}
 	return {
 		assessments,
