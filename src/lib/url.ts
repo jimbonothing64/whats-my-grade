@@ -2,6 +2,8 @@ import { validateAssessments, type Assessment } from './zod';
 
 export const REQUIRED_ASSESSMENT = 'requiredassessment';
 export const ASSESSMENTS = 'assessments';
+export const FORECASTED_ASSESSMENTS = 'forecasted';
+export const MARKED_ASSESSMENTS = 'marked';
 
 export const parseAssessments = (url: URL) => {
 	let assessments = null;
@@ -17,7 +19,7 @@ export const parseAssessments = (url: URL) => {
 	return assessments;
 };
 
-export const parseRequiredAssessment = (url: URL) => {
+export const parseRequiredAssessmentId = (url: URL) => {
 	const required = url.searchParams.get(REQUIRED_ASSESSMENT);
 	if (required) {
 		return parseInt(required);
@@ -27,6 +29,6 @@ export const parseRequiredAssessment = (url: URL) => {
 
 export const minRequiredGradeUrl = (i: number, assessments: Assessment[]) => {
 	const stringified = JSON.stringify(assessments);
-	const url = `/required-grade/?${REQUIRED_ASSESSMENT}=${i}&${ASSESSMENTS}=${stringified}`
+	const url = `/required-grade/?${REQUIRED_ASSESSMENT}=${i}&${ASSESSMENTS}=${stringified}`;
 	return url;
-}
+};
