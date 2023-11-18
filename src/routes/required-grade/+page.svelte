@@ -1,12 +1,7 @@
 <script lang="ts">
 	import StatCard from '$lib/components/StatCard.svelte';
 	import { browser } from '$app/environment';
-	import {
-		totalWeightedMark,
-		totalInvigilatedWeightedMark,
-		totalWeight,
-		requiredGrade
-	} from '$lib/grades';
+	import { totalWeightedMark, totalWeight, requiredGrade } from '$lib/grades';
 	import { elementIsVisibleInViewport } from '$lib/lib';
 	import { validateAssessments, type Assessment } from '$lib/zod';
 	import { page } from '$app/stores';
@@ -24,8 +19,9 @@
 	$: requiredAssessmentIndex = data.requiredAssessment;
 	$: requiredAssessment = assessments[requiredAssessmentIndex];
 	$: total = totalWeight(assessments);
-	$: totalWeighted = totalWeightedMark(assessments);
 	$: required = requiredGrade(desiredGrade, requiredAssessment, assessments);
+	$: totalWeighted =
+		totalWeightedMark(assessments) + required.requiredGrade * (requiredAssessment.weight / total);
 
 	function intialiseAssessments() {
 		if (data?.assessments) {
