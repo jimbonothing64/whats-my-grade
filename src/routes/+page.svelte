@@ -120,13 +120,24 @@
 				</svg>
 			</button>
 		</div>
-		<AssessmentList
-			bind:assessments
-			bind:invalids
-			bind:total
-			{hadnleInsert}
-			{handleRemove}
-			{handleCalculate}
-		/>
+		<AssessmentList bind:assessments bind:invalids bind:total {handleRemove} {handleCalculate}>
+			<button
+				on:click={() => hadnleInsert()}
+				class="flex flex-col md:flex-row p-4 justify-between text-lg hover:shadow-md group rounded-md ring-1 ring-slate-200 bg-white dark:bg-gray-800 shadow-sm"
+			>
+				<p>New assessment</p>
+
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-6 h-6 self-center"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+				</svg>
+			</button>
+		</AssessmentList>
 	</div>
 </section>
