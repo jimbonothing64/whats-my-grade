@@ -10,3 +10,8 @@
 <p>
 	{course.code}
 </p>
+<ul>
+	{#each course.assessments as assessment}
+		<li>{assessment.name}: {assessment.weight}%</li>
+	{/each}
+</ul>

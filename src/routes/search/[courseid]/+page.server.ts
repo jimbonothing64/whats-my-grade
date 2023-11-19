@@ -20,6 +20,8 @@ export const load: PageServerLoad = async ({ url, params }) => {
 	const courseName = document.querySelector('.getCourseDetails');
 	const assessmentDiv = document.getElementById('ctl00_ContentPlaceHolder1_AssessmentRepeaterDiv');
 	if (!assessmentDiv) console.log('unsuccessful table find');
+
+	const assessments = [];
 	if (assessmentDiv) {
 		const assessmentNames = Array.from(assessmentDiv.querySelectorAll("[data-title='Type']")).map(
 			(el) => el.textContent?.trim()
@@ -27,7 +29,13 @@ export const load: PageServerLoad = async ({ url, params }) => {
 		const assessmentWeights = Array.from(
 			assessmentDiv.querySelectorAll("[data-title='Percentage']")
 		).map((el) => el.textContent?.trim());
-		console.log(assessmentNames, assessmentWeights);
+
+		assessmentNames.forEach((name, i) => {
+			assessments.push({
+				name: name,
+				weight: parseFloat(assessmentWeights[i]?.trimEnd().slice(0, -1))
+			});
+		});
 	}
 
 	// } catch {
@@ -35,6 +43,10 @@ export const load: PageServerLoad = async ({ url, params }) => {
 	// }
 
 	return {
-		course: { code: courseCode?.textContent?.trim(), name: courseName?.textContent?.trim() }
+		course: {
+			code: courseCode?.textContent?.trim(),
+			name: courseName?.textContent?.trim(),
+			assessments
+		}
 	};
 };
