@@ -14,12 +14,12 @@ export const validateAssessments = (assessments: Assessment[] | unknown[]) => {
 	const errors: { [index: number]: unknown } = {};
 	const valids = [];
 	for (const [index, assessment] of assessments.entries()) {
+		const serialisedAssessment = { id: index, ...(assessment as object) };
 		try {
-			const serialisedAssessment = { id: index, ...(assessment as object) };
 			const validAssessment = assignmentSchema.parse(serialisedAssessment);
 			valids.push(validAssessment);
 		} catch (error) {
-			errors[index] = error;
+			errors[serialisedAssessment.id] = error;
 		}
 	}
 

@@ -23,7 +23,6 @@ export const load: PageLoad = ({ url }) => {
 		(assessment) => assessment.id === requiredAssessmentId
 	);
 	return {
-		assessments,
 		markedAssessments,
 		forecastedAssessments,
 		requiredAssessment

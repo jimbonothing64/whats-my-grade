@@ -13,7 +13,7 @@
 	export let data: PageData;
 	let forcastedAssessments = data.forecastedAssessments;
 	let markedAssessments = data.markedAssessments;
-	let invalids: number[] = [];
+	// let invalids: number[] = [];
 	let statsElement: Element | undefined;
 	let desiredGrade = 50.0;
 	let requiredAssessment = data.requiredAssessment;
@@ -23,6 +23,9 @@
 		...validateAssessments(forcastedAssessments).valids,
 		...validateAssessments(markedAssessments).valids
 	];
+	$: invalids = Object.keys(
+		validateAssessments([requiredAssessment, ...forcastedAssessments, ...markedAssessments]).errors
+	).map((el) => Number(el));
 	$: total = totalWeight(assessments);
 	$: required = requiredGrade(desiredGrade, requiredAssessment, assessments);
 	$: totalWeighted =
@@ -37,16 +40,10 @@
 	}
 
 	function handleCalculate(scroll = false) {
-		total = totalWeight(assessments);
-		totalWeighted =
-			totalWeightedMark(assessments) + required.requiredGrade * (requiredAssessment.weight / total);
-		if (scroll && invalids.length === 0 && statsElement) {
-			if (!elementIsVisibleInViewport(statsElement, true)) statsElement.scrollIntoView(false);
-		}
 		if (invalids.length === 0) {
 			setUrlAssessments(assessments);
 		}
-		console.log(assessments);
+		console.log(invalids);
 	}
 </script>
 
@@ -74,7 +71,12 @@
 			<CalculateButton on:click={() => handleCalculate(true)} />
 		</div>
 
-		<AssessmentList bind:assessments={forcastedAssessments} {invalids} {total} {handleCalculate} />
+		<AssessmentList
+			bind:assessments={forcastedAssessments}
+			bind:invalids
+			{total}
+			{handleCalculate}
+		/>
 	{/if}
 	{#if markedAssessments.length > 0}
 		<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
@@ -83,6 +85,6 @@
 				<CalculateButton on:click={() => handleCalculate(true)} />
 			{/if}
 		</div>
-		<AssessmentList bind:assessments={markedAssessments} {invalids} {total} {handleCalculate} />
+		<AssessmentList bind:assessments={markedAssessments} bind:invalids {total} {handleCalculate} />
 	{/if}
 </section>

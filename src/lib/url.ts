@@ -27,8 +27,8 @@ export const parseRequiredAssessmentId = (url: URL) => {
 	return null;
 };
 
-export const minRequiredGradeUrl = (i: number, assessments: Assessment[]) => {
+export const minRequiredGradeUrl = (assessment: Assessment, assessments: Assessment[]) => {
 	const stringified = JSON.stringify(assessments);
-	const url = `/required-grade/?${REQUIRED_ASSESSMENT}=${i}&${ASSESSMENTS}=${stringified}`;
+	const url = `/required-grade/?${REQUIRED_ASSESSMENT}=${assessment.id}&${ASSESSMENTS}=${stringified}`;
 	return url;
 };

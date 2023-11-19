@@ -14,14 +14,18 @@
 
 <ul class="flex flex-col bg-slate-50 dark:bg-slate-900 gap-3 px-5 py-3">
 	{#each assessments as assessment, i (assessment)}
-		<AssessmentCard state={invalids.includes(i) ? 'invalid' : 'none'}>
-			<AssessmentDetial bind:assessment {handleCalculate} invalid={invalids.includes(i)}>
-				{#if !invalids.includes(i) && assessment.mark === 0}
+		<AssessmentCard state={invalids.includes(assessment.id) ? 'invalid' : 'none'}>
+			<AssessmentDetial
+				bind:assessment
+				{handleCalculate}
+				invalid={invalids.includes(assessment.id)}
+			>
+				{#if !invalids.includes(assessment.id) && assessment.mark == 0}
 					<div class="justify-end">
-						<a href={minRequiredGradeUrl(i, assessments).toString()}>Calc</a>
+						<a href={minRequiredGradeUrl(assessment, assessments).toString()}>Calc</a>
 					</div>
 				{/if}
-				{#if invalids.includes(i)}
+				{#if invalids.includes(assessment.id)}
 					<div
 						class="font-medium md:flex md:justify-end md:flex-grow text-inherit bg-inherit text-red-500 dark:text-red-400 hover:underline opacity-100 group-hover:hidden hidden"
 					>
