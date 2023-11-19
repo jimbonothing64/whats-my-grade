@@ -1,9 +1,9 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { parseHTML } from 'linkedom';
+import { validateAssessments } from '$lib/zod';
 
-export const load: PageServerLoad = async ({ url, params }) => {
-	const course = [];
+export const load: PageServerLoad = async ({ params }) => {
 	const courseId = params.courseid;
 
 	const res = await fetch(
@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ url, params }) => {
 	const assessmentDiv = document.getElementById('ctl00_ContentPlaceHolder1_AssessmentRepeaterDiv');
 	if (!assessmentDiv) console.log('unsuccessful table find');
 
-	const assessments = [];
+	const rawAssessments: unknown[] = [];
 	if (assessmentDiv) {
 		const assessmentNames = Array.from(assessmentDiv.querySelectorAll("[data-title='Type']")).map(
 			(el) => el.textContent?.trim()
@@ -31,12 +31,16 @@ export const load: PageServerLoad = async ({ url, params }) => {
 		).map((el) => el.textContent?.trim());
 
 		assessmentNames.forEach((name, i) => {
-			assessments.push({
+			rawAssessments.push({
 				name: name,
-				weight: parseFloat(assessmentWeights[i]?.trimEnd().slice(0, -1))
+				weight: parseFloat(assessmentWeights[i]?.trimEnd().slice(0, -1) || '0.0'),
+				invigilated: false
 			});
 		});
 	}
+
+	const { valids, errors } = validateAssessments(rawAssessments);
+	console.log(errors);
 
 	// } catch {
 	// 	throw error(404, 'not found');
@@ -46,7 +50,7 @@ export const load: PageServerLoad = async ({ url, params }) => {
 		course: {
 			code: courseCode?.textContent?.trim(),
 			name: courseName?.textContent?.trim(),
-			assessments
+			assessments: valids
 		}
 	};
 };

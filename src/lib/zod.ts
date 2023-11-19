@@ -6,7 +6,7 @@ export const assignmentSchema = z.object({
 	id: z.number(),
 	name: z.string().optional(),
 	weight: z.coerce.number().min(0).max(100),
-	mark: markSchema,
+	mark: markSchema.optional(),
 	invigilated: z.boolean()
 });
 

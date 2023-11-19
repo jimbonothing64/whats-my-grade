@@ -19,6 +19,12 @@ export const parseAssessments = (url: URL) => {
 	return assessments;
 };
 
+export const importCourseUrl = (assessments: Assessment[]) => {
+	const stringified = JSON.stringify(assessments);
+	const url = `/?${ASSESSMENTS}=${stringified}`;
+	return url;
+};
+
 export const parseRequiredAssessmentId = (url: URL) => {
 	const required = url.searchParams.get(REQUIRED_ASSESSMENT);
 	if (required) {

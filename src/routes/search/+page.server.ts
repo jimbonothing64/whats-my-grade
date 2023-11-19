@@ -17,8 +17,23 @@ export const load: PageServerLoad = async ({ url }) => {
 		const html = await res.text();
 		const { document } = parseHTML(html);
 		const elementsWithClass = document.querySelectorAll('.tableTitle');
-		const elementsArray = Array.from(elementsWithClass);
-		courses = elementsArray.map((el) => el.textContent?.trim());
+		const coursesElementsArray = Array.from(elementsWithClass);
+
+		courses = coursesElementsArray.forEach((el) => {
+			const code = el.textContent?.trim();
+			const ocurancesElement = Array.from(
+				el?.parentElement?.nextElementSibling?.querySelectorAll('td') || []
+			);
+			const ocurances = ocurancesElement
+				.map((el) => {
+					console.log(el.innerText?.trim());
+					return el.innerText.trim();
+				})
+				.filter((text) => text?.trim() != '');
+			// console.log(ocurances);
+		});
+
+		courses = coursesElementsArray.map((el) => el.textContent?.trim());
 		console.log(courses);
 
 		// } catch {
