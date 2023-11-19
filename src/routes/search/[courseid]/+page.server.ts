@@ -9,6 +9,8 @@ export const load: PageServerLoad = async ({ url, params }) => {
 	const res = await fetch(
 		`https://www.canterbury.ac.nz/courseinfo/GetCourses.aspx?course=${courseId}&year=2023`
 	);
+
+	// Unsuccessful, no page exists! Go back to search.
 	if (!res.redirected) {
 		throw redirect(300, `/search?query=${courseId}&redirected=1`);
 	}
@@ -16,9 +18,17 @@ export const load: PageServerLoad = async ({ url, params }) => {
 	const { document } = parseHTML(html);
 	const courseCode = document.querySelector('.page-type');
 	const courseName = document.querySelector('.getCourseDetails');
-	// const elementsArray = Array.from(elementsWithClass);
-	// course = elementsArray.map((el) => el.textContent?.trim());
-	// console.log(course);
+	const assessmentDiv = document.getElementById('ctl00_ContentPlaceHolder1_AssessmentRepeaterDiv');
+	if (!assessmentDiv) console.log('unsuccessful table find');
+	if (assessmentDiv) {
+		const assessmentNames = Array.from(assessmentDiv.querySelectorAll("[data-title='Type']")).map(
+			(el) => el.textContent?.trim()
+		);
+		const assessmentWeights = Array.from(
+			assessmentDiv.querySelectorAll("[data-title='Percentage']")
+		).map((el) => el.textContent?.trim());
+		console.log(assessmentNames, assessmentWeights);
+	}
 
 	// } catch {
 	// 	throw error(404, 'not found');
