@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 	import { totalWeightedMark, totalWeight, requiredGrade } from '$lib/grades';
 	import { elementIsVisibleInViewport } from '$lib/lib';
-	import type { Assessment } from '$lib/zod';
+	import { validateAssessments, type Assessment } from '$lib/zod';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
@@ -11,14 +11,18 @@
 	import CalculateButton from '$lib/components/CalculateButton.svelte';
 
 	export let data: PageData;
-	let assessments = data.assessments;
 	let forcastedAssessments = data.forecastedAssessments;
 	let markedAssessments = data.markedAssessments;
 	let invalids: number[] = [];
 	let statsElement: Element | undefined;
 	let desiredGrade = 50.0;
+	let requiredAssessment = data.requiredAssessment;
 
-	$: requiredAssessment = data.requiredAssessment;
+	$: assessments = [
+		requiredAssessment,
+		...validateAssessments(forcastedAssessments).valids,
+		...validateAssessments(markedAssessments).valids
+	];
 	$: total = totalWeight(assessments);
 	$: required = requiredGrade(desiredGrade, requiredAssessment, assessments);
 	$: totalWeighted =
@@ -33,8 +37,9 @@
 	}
 
 	function handleCalculate(scroll = false) {
-		total = totalWeight(assessments) + required.requiredGrade * (requiredAssessment.weight / total);
-		totalWeighted = totalWeightedMark(assessments);
+		total = totalWeight(assessments);
+		totalWeighted =
+			totalWeightedMark(assessments) + required.requiredGrade * (requiredAssessment.weight / total);
 		if (scroll && invalids.length === 0 && statsElement) {
 			if (!elementIsVisibleInViewport(statsElement, true)) statsElement.scrollIntoView(false);
 		}
@@ -71,11 +76,13 @@
 
 		<AssessmentList bind:assessments={forcastedAssessments} {invalids} {total} {handleCalculate} />
 	{/if}
-	<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
-		<h3 class="text-xl align-middle font-bold dark:text-white p-5">Marked Assessments</h3>
-		{#if forcastedAssessments.length === 0}
-			<CalculateButton on:click={() => handleCalculate(true)} />
-		{/if}
-	</div>
-	<AssessmentList bind:assessments={markedAssessments} {invalids} {total} {handleCalculate} />
+	{#if markedAssessments.length > 0}
+		<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
+			<h3 class="text-xl align-middle font-bold dark:text-white p-5">Marked Assessments</h3>
+			{#if forcastedAssessments.length === 0}
+				<CalculateButton on:click={() => handleCalculate(true)} />
+			{/if}
+		</div>
+		<AssessmentList bind:assessments={markedAssessments} {invalids} {total} {handleCalculate} />
+	{/if}
 </section>
