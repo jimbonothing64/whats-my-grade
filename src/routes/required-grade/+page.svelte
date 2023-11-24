@@ -2,7 +2,6 @@
 	import StatCard from '$lib/components/StatCard.svelte';
 	import { browser } from '$app/environment';
 	import { totalWeightedMark, totalWeight, requiredGrade } from '$lib/grades';
-	import { elementIsVisibleInViewport } from '$lib/lib';
 	import { validateAssessments, type Assessment } from '$lib/zod';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
@@ -13,8 +12,6 @@
 	export let data: PageData;
 	let forcastedAssessments = data.forecastedAssessments;
 	let markedAssessments = data.markedAssessments;
-	// let invalids: number[] = [];
-	let statsElement: Element | undefined;
 	let desiredGrade = 50.0;
 	let requiredAssessment = data.requiredAssessment;
 
@@ -39,17 +36,16 @@
 		}
 	}
 
-	function handleCalculate(scroll = false) {
+	function handleCalculate() {
 		if (invalids.length === 0) {
 			setUrlAssessments(assessments);
 		}
-		console.log(invalids);
 	}
 </script>
 
 <section class="py-3">
 	<div class="flex justify-center p-4">
-		<div bind:this={statsElement} class="flex gap-5 flex-col md:flex-row">
+		<div class="flex gap-5 flex-col md:flex-row">
 			<StatCard
 				stat={required.requiredGrade}
 				title="Required Grade"
@@ -68,7 +64,7 @@
 	{#if forcastedAssessments.length > 0}
 		<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
 			<h3 class="text-xl align-middle font-bold dark:text-white p-5">Forecasted Marks</h3>
-			<CalculateButton on:click={() => handleCalculate(true)} />
+			<CalculateButton on:click={() => handleCalculate()} />
 		</div>
 
 		<AssessmentList
@@ -82,7 +78,7 @@
 		<div class="flex justify-between pt-3 sticky top-0 bg-white dark:bg-gray-800">
 			<h3 class="text-xl align-middle font-bold dark:text-white p-5">Marked Assessments</h3>
 			{#if forcastedAssessments.length === 0}
-				<CalculateButton on:click={() => handleCalculate(true)} />
+				<CalculateButton on:click={() => handleCalculate()} />
 			{/if}
 		</div>
 		<AssessmentList bind:assessments={markedAssessments} bind:invalids {total} {handleCalculate} />

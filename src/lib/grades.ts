@@ -60,10 +60,10 @@ const totalInvigilatedWeightedMark = (assessments: Assessment[]) => {
  */
 const requiredGrade = (desiredGrade: number, assessment: Assessment, assessments: Assessment[]) => {
 	const totalExistingGrade = totalWeightedMark(assessments);
-	const remainingWeight = totalWeight(assessments) - assessment.weight;
-	const remainingTotalScoreNeeded = (desiredGrade - totalExistingGrade) / remainingWeight;
+	const remainingTotalScoreNeeded = (desiredGrade - totalExistingGrade) / assessment.weight;
+	const required = Math.max(Math.min(remainingTotalScoreNeeded * 100.0, 100.0), 0.0);
 	return {
-		requiredGrade: Math.max(Math.min(remainingTotalScoreNeeded * 100.0, 100.0), 0.0),
+		requiredGrade: required,
 		isPossible: remainingTotalScoreNeeded <= 100.0
 	};
 };
