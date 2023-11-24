@@ -8,6 +8,7 @@
 	import type { PageData } from './$types';
 	import AssessmentList from '$lib/components/AssessmentList.svelte';
 	import CalculateButton from '$lib/components/CalculateButton.svelte';
+	import { FORECASTED_ASSESSMENTS, setUrlAssessments } from '$lib/url';
 
 	export let data: PageData;
 	let forcastedAssessments = data.forecastedAssessments;
@@ -28,17 +29,9 @@
 	$: totalWeighted =
 		totalWeightedMark(assessments) + required.requiredGrade * (requiredAssessment.weight / total);
 
-	function setUrlAssessments(assessments: Assessment[]) {
-		const stringified = JSON.stringify(assessments);
-		if (stringified && browser) {
-			$page.url.searchParams.set('assessments', stringified);
-			goto($page.url, { keepFocus: true }); // Set updated url.
-		}
-	}
-
 	function handleCalculate() {
 		if (invalids.length === 0) {
-			setUrlAssessments(assessments);
+			setUrlAssessments(forcastedAssessments, $page.url);
 		}
 	}
 </script>

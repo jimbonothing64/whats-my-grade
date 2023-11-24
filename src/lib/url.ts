@@ -1,3 +1,5 @@
+import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 import { validateAssessments, type Assessment } from './zod';
 
 export const REQUIRED_ASSESSMENT = 'requiredassessment';
@@ -5,11 +7,11 @@ export const ASSESSMENTS = 'assessments';
 export const FORECASTED_ASSESSMENTS = 'forecasted';
 export const MARKED_ASSESSMENTS = 'marked';
 
-export const parseAssessments = (url: URL) => {
+export const parseAssessments = (url: URL, param = ASSESSMENTS) => {
 	let assessments = null;
-	if (url.searchParams.has(ASSESSMENTS)) {
+	if (url.searchParams.has(param)) {
 		try {
-			const urlAssessments = url.searchParams.get(ASSESSMENTS) as string;
+			const urlAssessments = url.searchParams.get(param) as string;
 			const parsed = JSON.parse(urlAssessments);
 			assessments = validateAssessments(parsed).valids;
 		} catch {
@@ -37,4 +39,12 @@ export const minRequiredGradeUrl = (assessment: Assessment, assessments: Assessm
 	const stringified = JSON.stringify(assessments);
 	const url = `/required-grade/?${REQUIRED_ASSESSMENT}=${assessment.id}&${ASSESSMENTS}=${stringified}`;
 	return url;
+};
+
+export const setUrlAssessments = (assessments: Assessment[], url: URL) => {
+	const stringified = JSON.stringify(assessments);
+	if (stringified && browser) {
+		url.searchParams.set(FORECASTED_ASSESSMENTS, stringified);
+		goto(url, { keepFocus: true });
+	}
 };
