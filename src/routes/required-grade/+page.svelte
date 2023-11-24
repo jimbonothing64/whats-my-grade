@@ -1,14 +1,12 @@
 <script lang="ts">
 	import StatCard from '$lib/components/StatCard.svelte';
-	import { browser } from '$app/environment';
 	import { totalWeightedMark, totalWeight, requiredGrade } from '$lib/grades';
 	import { validateAssessments, type Assessment } from '$lib/zod';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import AssessmentList from '$lib/components/AssessmentList.svelte';
 	import CalculateButton from '$lib/components/CalculateButton.svelte';
-	import { FORECASTED_ASSESSMENTS, setUrlAssessments } from '$lib/url';
+	import { FORECASTED_ASSESSMENTS, REQUIRED_ASSESSMENT, setUrlAssessments } from '$lib/url';
 
 	export let data: PageData;
 	let forcastedAssessments = data.forecastedAssessments;
@@ -31,7 +29,7 @@
 
 	function handleCalculate() {
 		if (invalids.length === 0) {
-			setUrlAssessments(forcastedAssessments, $page.url);
+			setUrlAssessments(forcastedAssessments, $page.url, FORECASTED_ASSESSMENTS);
 		}
 	}
 </script>

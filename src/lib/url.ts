@@ -41,10 +41,10 @@ export const minRequiredGradeUrl = (assessment: Assessment, assessments: Assessm
 	return url;
 };
 
-export const setUrlAssessments = (assessments: Assessment[], url: URL) => {
+export const setUrlAssessments = (assessments: Assessment[], url: URL, param = ASSESSMENTS) => {
 	const stringified = JSON.stringify(assessments);
 	if (stringified && browser) {
-		url.searchParams.set(FORECASTED_ASSESSMENTS, stringified);
+		url.searchParams.set(param, stringified);
 		goto(url, { keepFocus: true });
 	}
 };
